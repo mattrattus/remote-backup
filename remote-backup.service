@@ -1,0 +1,11 @@
+[Unit]
+Description=Automatin of remote-backup
+
+[Service]
+Type=simple
+User=user
+Group=user
+ExecStart=/home/user/remote-backup/backup.sh
+
+[Install]
+WantedBy=default.target
