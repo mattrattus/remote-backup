@@ -27,36 +27,36 @@ remote_folder=/home/user/backup #<== setup
 #####################
 
 #Defaults
-backup_folder=${HOME}/backup_folder
-init_backup=${HOME}/backup_folder/init_backup.tar
-default_backup=${HOME}/backup_folder/default_backup.tar
+backup_folder=${HOME}/backup_remote
+init_backup=${HOME}/backup_remote/init_backup.tar
+default_backup=${HOME}/backup_remote/default_backup.tar
 
 #Check if the defaults are in their places
 [ -d $backup_folder ] || mkdir -p "$backup_folder"
 
-[ -f $init_backup ] || tar cfP ${HOME}/backup_folder/init_backup.tar ${folders[*]} && gzip ${HOME}/backup_folder/init_backup.tar && rsync -aXA -e "ssh -p '$port' -i '$key'" ${HOME}/backup_folder/init_backup.tar.gz "$remote_server":"$remote_folder" && gunzip ${HOME}/backup_folder/init_backup.tar.gz
+[ -f $init_backup ] || tar cfP ${HOME}/backup_remote/init_backup.tar ${folders[*]} && gzip ${HOME}/backup_remote/init_backup.tar && rsync -aXA -e "ssh -p '$port' -i '$key'" ${HOME}/backup_remote/init_backup.tar.gz "$remote_server":"$remote_folder" && gunzip ${HOME}/backup_remote/init_backup.tar.gz
 
-[ -f $default_backup ] || tar cfP ${HOME}/backup_folder/default_backup.tar ${folders[*]}
+[ -f $default_backup ] || tar cfP ${HOME}/backup_remote/default_backup.tar ${folders[*]}
 
 #Backup
-tar cfP ${HOME}/backup_folder/current_backup.tar ${folders[*]}
+tar cfP ${HOME}/backup_remote/current_backup.tar ${folders[*]}
 
-diff -q ${HOME}/backup_folder/default_backup.tar ${HOME}/backup_folder/current_backup.tar
+diff -q ${HOME}/backup_remote/default_backup.tar ${HOME}/backup_remote/current_backup.tar
 
 if [ $? -eq 0 ]; then
-    rm ${HOME}/backup_folder/current_backup.tar
+    rm ${HOME}/backup_remote/current_backup.tar
 
 elif [ $? -eq 1 ]; then
-    rm ${HOME}/backup_folder/default_backup.tar && cp ${HOME}/backup_folder/current_backup.tar ${HOME}/backup_folder/default_backup.tar && mv ${HOME}/backup_folder/current_backup.tar ${HOME}/backup_folder/backup_`date +%Y%m%d`.tar
+    rm ${HOME}/backup_remote/default_backup.tar && cp ${HOME}/backup_remote/current_backup.tar ${HOME}/backup_remote/default_backup.tar && mv ${HOME}/backup_remote/current_backup.tar ${HOME}/backup_remote/backup_`date +%Y%m%d`.tar
 
 #Compression
-gzip ${HOME}/backup_folder/backup_`date +%Y%m%d`.tar
+gzip ${HOME}/backup_remote/backup_`date +%Y%m%d`.tar
 
 #rsync
-rsync -aXA -e "ssh -p '$port' -i '$key'" ${HOME}/backup_folder/backup_`date +%Y%m%d`.tar.gz "$remote_server":"$remote_folder"
+rsync -aXA -e "ssh -p '$port' -i '$key'" ${HOME}/backup_remote/backup_`date +%Y%m%d`.tar.gz "$remote_server":"$remote_folder"
 
 #Cleanup
-rm ${HOME}/backup_folder/backup_`date +%Y%m%d`.tar.gz
+rm ${HOME}/backup_remote/backup_`date +%Y%m%d`.tar.gz
 
 fi
 
