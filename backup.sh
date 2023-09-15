@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #remote-backup
-#v1.0.0
+#v1.0.1
 #by mattrattus
 #https://mattrattus.github.io
 
